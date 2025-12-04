@@ -122,9 +122,23 @@ void printPath(pair<int,int> exitcell,
 // }
 bool dfs(int r, int c, int exit_r, int exit_c, const vector<vector<int>>& maze, vector<vector<bool>>& visited,
     vector<vector<int>>& parent_r, vector<vector<int>>& parent_c) {
+    visited[r][c] = true;
     if (r == exit_r && c == exit_c) {
         return true;
     }
+    for (int i = 0; i < 4; i++) {
+        int nr = r + dr[i];
+        int nc = c + dc[i];
+
+        if (nr >= 0 && nr < maze.size() && nc >= 0 && nc < maze[0].size() && maze[nr][nc] == 0 && !visited[nr][nc]) {
+            parent_r[nr][nc] = r;
+            parent_c[nr][nc] = c;
+            if (dfs(nr, nc, exit_r, exit_c, maze, visited, parent_r, parent_c)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 
@@ -160,6 +174,13 @@ int main() {
     vector<vector<bool>> visited(N, vector<bool>(M, false));
     vector<vector<int>> parent_r(N, vector<int>(M, -1));
     vector<vector<int>> parent_c(N, vector<int>(M, -1));
+
+if (dfs(ent_r, ent_c, exit_r, exit_c, maze, visited, parent_r, parent_c)) {
+    cout << "Solvable";
+}
+else {
+    cout << "Unsolvable";
+}
 
     // ------------------------------------------------------
     // STUDENT WORK:
